@@ -15,6 +15,9 @@
 		<c:when test="${biblioForm['new']}">
 			<h1>Add</h1>
 		</c:when>
+    <c:otherwise>
+      <h1>Update</h1>
+    </c:otherwise>
 	</c:choose>
 	<br />
 
@@ -69,8 +72,12 @@
 				<c:choose>
 					<c:when test="${biblioForm['new']}">
 						<button type="submit" class="btn-lg btn-primary pull-right">Add</button>
-					</c:when>
-				</c:choose>
+          </c:when>
+          <c:otherwise>
+            <button type="submit" class="btn-lg btn-primary pull-right">Update</button>
+          </c:otherwise>
+        </c:choose>
+
 			</div>
 		</div>
 	</form:form>

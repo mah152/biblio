@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<spring:url value="/" var="urlHome" />
+<spring:url value="/biblios" var="urlBib" />
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,6 +46,9 @@
 					<td>${biblio.title}</td>
 					<td>${biblio.year}</td>
 					<td>${biblio.journal}</td>
+          <td class="active"><a href="${urlBib}/${biblio.id}/update">Update</a></td>
+          <td class="active"><a href="${urlBib}/${biblio.id}/delete">Delete</a></td>
+      </ul>
 				</tr>
 
 			</c:forEach>

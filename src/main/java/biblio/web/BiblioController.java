@@ -78,7 +78,10 @@ public class BiblioController {
 			redirectAttributes.addFlashAttribute("css", "success");
 			if(biblio.isNew()){
 				redirectAttributes.addFlashAttribute("msg", "Bibliography added successfully!");
-			}			
+			} else{
+        redirectAttributes.addFlashAttribute("msg", "Bibliography updated successfully!");
+      }
+	
 			biblioService.saveOrUpdate(biblio);
 			
 			// POST/REDIRECT/GET
@@ -109,6 +112,27 @@ public class BiblioController {
 		return "biblios/biblioform";
 
 	}
+  // show update form
+  @RequestMapping(value = "/biblios/{id}/update", method = RequestMethod.GET)
+  public String showUpdateForm(@PathVariable("id") int id, Model model) {
+
+    logger.debug("showUpdateForm() : {}", id);
+///     System.out.println( "showUpdateForm" );
+    Biblio biblio = biblioService.findById(id);
+    model.addAttribute("biblioForm", biblio);
+///    setDefaults( model );
+
+    return "biblios/biblioform";
+
+  }
+/*
+  private void setDefaults(Model model) {
+    Map<String, String> param = new LinkedHashMap<String, String>();
+    param.put("t1", "T2");
+    model.addAttribute("countryList", country);
+  }
+*/
+
 	// show biblio
 	@RequestMapping(value = "/biblios/{id}", method = RequestMethod.GET)
 	public String showBiblio(@PathVariable("id") int id, Model model) {
@@ -139,22 +163,9 @@ public class BiblioController {
 		return model;
 
 	}
-  // show update form
-  @RequestMapping(value = "/biblios/{id}/update", method = RequestMethod.GET)
-  public String showUpdateBiblioForm(@PathVariable("id") int id, Model model) {
-
-    logger.debug("showUpdateBiblioForm() : {}", id);
-
-    Biblio biblio = biblioService.findById(id);
-    model.addAttribute("biblioForm", biblio);
-
-    populateDefaultModel(model);
-
-    return "biblios/biblioform";
-  }
 
   // delete entry
-  @RequestMapping(value = "biblios/{id}/delete", method = RequestMethod.POST)
+  @RequestMapping(value = "biblios/{id}/delete", method = RequestMethod.GET)
   public String deleteBiblio(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
 
     logger.debug("deleteBiblio() : {}", id);
