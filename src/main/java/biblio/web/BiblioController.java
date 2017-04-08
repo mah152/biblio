@@ -139,5 +139,33 @@ public class BiblioController {
 		return model;
 
 	}
+  // show update form
+  @RequestMapping(value = "/biblios/{id}/update", method = RequestMethod.GET)
+  public String showUpdateBiblioForm(@PathVariable("id") int id, Model model) {
+
+    logger.debug("showUpdateBiblioForm() : {}", id);
+
+    Biblio biblio = biblioService.findById(id);
+    model.addAttribute("biblioForm", biblio);
+
+    populateDefaultModel(model);
+
+    return "biblios/biblioform";
+  }
+
+  // delete entry
+  @RequestMapping(value = "biblios/{id}/delete", method = RequestMethod.POST)
+  public String deleteBiblio(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
+
+    logger.debug("deleteBiblio() : {}", id);
+
+    biblioService.delete(id);
+
+    redirectAttributes.addFlashAttribute("css", "success");
+    redirectAttributes.addFlashAttribute("msg", "Biblio-entry is deleted!");
+
+    return "redirect:/biblios";
+
+  }
 
 }

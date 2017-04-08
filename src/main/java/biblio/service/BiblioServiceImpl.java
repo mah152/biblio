@@ -33,7 +33,14 @@ public class BiblioServiceImpl implements BiblioService {
 
 		if (findById(biblio.getId())==null) {
 			biblioDao.save(biblio);
-		}
+		} else {
+      biblioDao.update(biblio);
+    }
 	}
+
+  @Override
+  public void delete(int id) {
+    biblioDao.delete(id);
+  }
 
 }

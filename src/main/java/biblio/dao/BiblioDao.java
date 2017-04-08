@@ -11,5 +11,7 @@ public interface BiblioDao {
 	List<Biblio> findAll();
 
 	void save(Biblio biblio);
+  void update(Biblio biblio);
+  void delete(Integer id);
 
 }

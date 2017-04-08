@@ -11,5 +11,6 @@ public interface BiblioService {
 	List<Biblio> findAll();
 
 	void saveOrUpdate(Biblio biblio);
+  void delete(int id);
 
 }

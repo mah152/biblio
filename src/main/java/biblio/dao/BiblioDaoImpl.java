@@ -70,6 +70,21 @@ public class BiblioDaoImpl implements BiblioDao {
 		
 	}
 
+  @Override
+  public void update(Biblio biblio) {
+
+    String sql = "UPDATE BIBLIO SET AUTHOR=:author, TITLE=:title, YEAR=:year,  JOURNAL=:year WHERE id=:id";
+
+    namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(biblio));
+  }
+
+  @Override
+  public void delete(Integer id) {
+
+    String sql = "DELETE FROM BIBLIO WHERE id= :id";
+    namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+  }
+
 	private SqlParameterSource getSqlParameterByModel(Biblio biblio) {
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
