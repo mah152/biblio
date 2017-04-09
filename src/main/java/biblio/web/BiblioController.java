@@ -1,7 +1,11 @@
 package biblio.web;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.util.List;
+import java.io.PrintWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,21 +121,12 @@ public class BiblioController {
   public String showUpdateForm(@PathVariable("id") int id, Model model) {
 
     logger.debug("showUpdateForm() : {}", id);
-///     System.out.println( "showUpdateForm" );
     Biblio biblio = biblioService.findById(id);
     model.addAttribute("biblioForm", biblio);
-///    setDefaults( model );
 
     return "biblios/biblioform";
 
   }
-/*
-  private void setDefaults(Model model) {
-    Map<String, String> param = new LinkedHashMap<String, String>();
-    param.put("t1", "T2");
-    model.addAttribute("countryList", country);
-  }
-*/
 
 	// show biblio
 	@RequestMapping(value = "/biblios/{id}", method = RequestMethod.GET)
@@ -173,10 +168,67 @@ public class BiblioController {
     biblioService.delete(id);
 
     redirectAttributes.addFlashAttribute("css", "success");
-    redirectAttributes.addFlashAttribute("msg", "Biblio-entry is deleted!");
+    redirectAttributes.addFlashAttribute("msg", "The article has been deleted!");
 
     return "redirect:/biblios";
 
+  }
+
+  // export db
+  @RequestMapping(value = "biblios/export", method = RequestMethod.GET)
+  public String exportBiblios(final RedirectAttributes redirectAttributes) {
+
+    logger.debug("exportBiblios() : {}");
+    System.out.println( "export called");
+    openExportFile();
+ 	  List<Biblio> data = biblioService.findAll();
+    for ( Biblio biblio : data ) {
+      System.out.println("Author : " + biblio.getAuthor());
+      String btype = "article";
+      String author = biblio.getAuthor();
+      String title = biblio.getTitle();
+      String journal =  biblio.getJournal();
+      Integer year = biblio.getYear();
+      exportStr( "@" + btype + "{ small,\n" );
+      exportStr( "author  =  {" + author +  "},\n");
+      exportStr( "title   =  {" + title  +  "},\n");
+      exportStr( "journal =  {" + journal + "},\n");
+      exportStr( "year    =  " + year    +   ",\n");
+      exportStr( "}\n\n" );
+    }
+    closeExportFile();
+    redirectAttributes.addFlashAttribute("css", "success");
+    redirectAttributes.addFlashAttribute("msg", "Bibliography has been exported!");
+
+    return "redirect:/biblios";
+
+  }
+
+  PrintWriter writer;
+
+  void openExportFile() {
+    try {
+      writer =  new PrintWriter("biblio-data.bib", "UTF-8");
+    } catch (Exception e) {
+      System.out.println( "Could not open export file\n" );
+      System.exit(11);
+    }
+  }
+
+  void closeExportFile() {
+    writer.close();
+  }
+
+  void exportStr( String s ) {
+    System.out.println( s );
+    try{
+      writer.print( s ); 
+
+    } catch (Exception e) {
+      System.out.println( "Error writing file\n" );
+      System.exit(12);
+    }
+    
   }
 
 }
