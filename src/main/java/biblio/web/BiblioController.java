@@ -220,7 +220,6 @@ public class BiblioController {
   }
 
   void exportStr( String s ) {
-    System.out.println( s );
     try{
       writer.print( s ); 
 
