@@ -179,11 +179,9 @@ public class BiblioController {
   public String exportBiblios(final RedirectAttributes redirectAttributes) {
 
     logger.debug("exportBiblios() : {}");
-    System.out.println( "export called");
     openExportFile();
  	  List<Biblio> data = biblioService.findAll();
     for ( Biblio biblio : data ) {
-      System.out.println("Author : " + biblio.getAuthor());
       String btype = "article";
       String author = biblio.getAuthor();
       String title = biblio.getTitle();
