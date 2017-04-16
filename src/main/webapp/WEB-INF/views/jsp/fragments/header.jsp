@@ -13,6 +13,7 @@
 <spring:url value="/" var="urlHome" />
 <spring:url value="/biblios/add" var="urlAdd" />
 <spring:url value="/biblios/export" var="urlExp" />
+<spring:url value="/biblios/import" var="urlImp" />
 
 <nav class="navbar navbar-inverse ">
 	<div class="container">
@@ -25,6 +26,9 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="active"><a href="${urlExp}">Export to Bibtex</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a href="${urlImp}">Import from Bibtex</a></li>
 			</ul>
 	</div>
 	</div>

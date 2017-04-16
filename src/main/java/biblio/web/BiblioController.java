@@ -1,11 +1,20 @@
 package biblio.web;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.io.PrintWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +32,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import org.jbibtex.BibTeXObject;
+import org.jbibtex.BibTeXDatabase;
+import org.jbibtex.BibTeXEntry;
+import org.jbibtex.BibTeXFormatter;
+import org.jbibtex.BibTeXParser;
+import org.jbibtex.BibTeXString;
+import org.jbibtex.Key;
+import org.jbibtex.Value;
+//import org.jbibtex.LaTeXObject;
+//import org.jbibtex.LaTeXParser;
+//import org.jbibtex.LaTeXPrinter;
+import org.jbibtex.ParseException;
 
 import biblio.model.Biblio;
 import biblio.service.BiblioService;
@@ -187,7 +209,10 @@ public class BiblioController {
       String title = biblio.getTitle();
       String journal =  biblio.getJournal();
       Integer year = biblio.getYear();
-      exportStr( "@" + btype + "{ small,\n" );
+      //bibtex key pattern, author+ID
+      //String bibtexKey = author + biblio.getId().toString();
+      String bibtexKey =  biblio.getId().toString();
+      exportStr( "@" + btype + "{ " + bibtexKey + ",\n" );
       exportStr( "author  =  {" + author +  "},\n");
       exportStr( "title   =  {" + title  +  "},\n");
       exportStr( "journal =  {" + journal + "},\n");
@@ -202,11 +227,98 @@ public class BiblioController {
 
   }
 
+  // import bib-tex // https://github.com/jbibtex/jbibtex
+  @RequestMapping(value = "biblios/import", method = RequestMethod.GET)
+  public String importBiblios(final RedirectAttributes redirectAttributes) {
+
+    logger.debug("importBiblios() : {}");
+//    ArrayList list = readAllLines()
+    try {
+      BibTeXParser parser = new BibTeXParser();
+      BibTeXDatabase database = parse(parser, fileName);
+      List<BibTeXObject> objects = database.getObjects();
+      //    assertEquals(4498, objects.size());
+
+      Collection<BibTeXEntry> entries = (database.getEntries()).values();
+      System.out.println( "num entries : " +  entries.size() );
+      for(BibTeXEntry entry : entries) {
+        Map<Key, Value> fields = entry.getFields();
+        for ( Key k : fields.keySet()) {
+           System.out.println("Key = " + k + " Value = " + fields.get(k).toUserString() ); // entry.getField(key));
+        }
+        Biblio biblio = new Biblio();
+        //author
+        Key key = new Key("author");
+        Value value = entry.getField(key);
+        biblio.setAuthor( value.toUserString() );
+        //title
+        key = new Key("title");
+        value = entry.getField(key);
+        biblio.setTitle( value.toUserString() );
+        //year
+        key = new Key("year");
+        value = entry.getField(key);
+        biblio.setYear( Integer.parseInt( value.toUserString() ));
+        //journal
+        key = new Key("journal");
+        value = entry.getField(key);
+        biblio.setJournal( value.toUserString() );
+        
+        biblioService.saveOrUpdate(biblio);
+        
+          // The field is not defined
+        if(value == null){
+          continue;
+        }
+        try {
+          String latexString = value.toUserString();
+          System.out.println(latexString);
+          //List<LaTeXObject> objects = parseLaTeX(latexString);
+          //String plainTextString = printLaTeX(objects);
+          //System.out.println(plainTextString);
+        } catch(Exception e){
+          e.printStackTrace(System.out);
+        }
+        System.out.println();
+      }
+      //Map<Key, BibTeXString> strings = database.getStrings();
+     //    assertEquals(467, strings.size());
+     // Map<Key, BibTeXEntry> entries = database.getEntries();
+      //    assertEquals(4030, entries.size());
+    }  catch(Exception e) {
+      System.out.println( "Bibtex Parse Exception\n" + e );
+    } // finally {      reader.close();    }
+
+    redirectAttributes.addFlashAttribute("css", "success");
+    redirectAttributes.addFlashAttribute("msg", "Bibliography has been imported!");
+    return "redirect:/biblios";
+  }
+
+  static  private BibTeXDatabase parse(BibTeXParser parser, String path) {
+    // InputStream is = (BibTeXParserTest.class).getResourceAsStream(path);
+    try {
+        Reader reader=null;
+      try {
+        /// Reader reader = new InputStreamReader(is, "US-ASCII");
+        reader = new FileReader(path);
+        return parser.parse(reader);
+      } catch(Exception e) {
+        System.out.println( "Parser Exception Error\n" + e );
+      } finally {
+        reader.close();
+      }
+    } catch (Exception e ) { 
+      System.out.println( "Reader  Exception Error\n" + e ); 
+    }
+    return null;
+  }
+
   PrintWriter writer;
+  String fileName = "biblio-data.bib";
 
   void openExportFile() {
     try {
-      writer =  new PrintWriter("biblio-data.bib", "UTF-8");
+      writer =  new PrintWriter(fileName, "UTF-8");
     } catch (Exception e) {
       System.out.println( "Could not open export file\n" );
       System.exit(11);
@@ -227,5 +339,5 @@ public class BiblioController {
     }
     
   }
-
 }
+
