@@ -41,15 +41,11 @@ import org.jbibtex.BibTeXParser;
 import org.jbibtex.BibTeXString;
 import org.jbibtex.Key;
 import org.jbibtex.Value;
-//import org.jbibtex.LaTeXObject;
-//import org.jbibtex.LaTeXParser;
-//import org.jbibtex.LaTeXPrinter;
 import org.jbibtex.ParseException;
 
 import biblio.model.Biblio;
 import biblio.service.BiblioService;
 import biblio.validator.BiblioFormValidator;
-//import javax.validation.Valid;
 
 //http://www.tikalk.com/redirectattributes-new-feature-spring-mvc-31/
 //https://en.wikipedia.org/wiki/Post/Redirect/Get
@@ -242,10 +238,10 @@ public class BiblioController {
       Collection<BibTeXEntry> entries = (database.getEntries()).values();
       System.out.println( "num entries : " +  entries.size() );
       for(BibTeXEntry entry : entries) {
-        Map<Key, Value> fields = entry.getFields();
-        for ( Key k : fields.keySet()) {
-           System.out.println("Key = " + k + " Value = " + fields.get(k).toUserString() ); // entry.getField(key));
-        }
+        // Map<Key, Value> fields = entry.getFields();
+        // for ( Key k : fields.keySet()) {
+        //   System.out.println("Key = " + k + " Value = " + fields.get(k).toUserString() ); // entry.getField(key));
+        // }
         Biblio biblio = new Biblio();
         //author
         Key key = new Key("author");
@@ -271,19 +267,19 @@ public class BiblioController {
           continue;
         }
         try {
-          String latexString = value.toUserString();
-          System.out.println(latexString);
-          //List<LaTeXObject> objects = parseLaTeX(latexString);
+          String lxString = value.toUserString();
+          // System.out.println(lxString);
+          //List<LaTeXObject> objects = parseLaTeX(lxString);
           //String plainTextString = printLaTeX(objects);
           //System.out.println(plainTextString);
         } catch(Exception e){
           e.printStackTrace(System.out);
         }
-        System.out.println();
+        // System.out.println();
       }
       //Map<Key, BibTeXString> strings = database.getStrings();
-     //    assertEquals(467, strings.size());
-     // Map<Key, BibTeXEntry> entries = database.getEntries();
+      //    assertEquals(467, strings.size());
+      // Map<Key, BibTeXEntry> entries = database.getEntries();
       //    assertEquals(4030, entries.size());
     }  catch(Exception e) {
       System.out.println( "Bibtex Parse Exception\n" + e );
@@ -337,7 +333,21 @@ public class BiblioController {
       System.out.println( "Error writing file\n" );
       System.exit(12);
     }
-    
+  }
+
+  // search
+  @RequestMapping(value = "biblios/search", method = RequestMethod.GET)
+  public String searchBiblios(final RedirectAttributes redirectAttributes) {
+      logger.debug("searchBiblios() : {}");
+      try {
+ 
+      redirectAttributes.addFlashAttribute("css", "success");
+      redirectAttributes.addFlashAttribute("msg", "Bibliography has been imported!");
+      return "redirect:/biblios";
+    } catch (Exception e) {
+      ;
+    }
+    return null;
   }
 }
 
