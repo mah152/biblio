@@ -9,6 +9,7 @@ public interface BiblioService {
 	Biblio findById(Integer id);
 	
 	List<Biblio> findAll();
+  List<Biblio> findByTitle(String title);
 
 	void saveOrUpdate(Biblio biblio);
   void delete(int id);

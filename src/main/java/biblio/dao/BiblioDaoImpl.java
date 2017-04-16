@@ -58,6 +58,16 @@ public class BiblioDaoImpl implements BiblioDao {
 	}
 
 	@Override
+	public List<Biblio> findByTitle(String title) {
+    Map<String, Object> params = new HashMap<String, Object>();
+ 	  params.put("title", title);
+ 	  String sql = "SELECT * FROM biblio WHERE title LIKE :title";
+ 	  List<Biblio> result = namedParameterJdbcTemplate.query(sql, params, new BiblioMapper());
+    System.out.println( "" + result.size() );
+ 	  return result;
+	}
+
+	@Override
 	public void save(Biblio biblio) {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();

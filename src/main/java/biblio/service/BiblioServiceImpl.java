@@ -29,6 +29,11 @@ public class BiblioServiceImpl implements BiblioService {
 	}
 
 	@Override
+	public List<Biblio> findByTitle(String title) {
+		return biblioDao.findByTitle(title);
+	}
+
+	@Override
 	public void saveOrUpdate(Biblio biblio) {
 
 		if (findById(biblio.getId())==null) {

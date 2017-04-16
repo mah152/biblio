@@ -228,20 +228,14 @@ public class BiblioController {
   public String importBiblios(final RedirectAttributes redirectAttributes) {
 
     logger.debug("importBiblios() : {}");
-//    ArrayList list = readAllLines()
     try {
       BibTeXParser parser = new BibTeXParser();
       BibTeXDatabase database = parse(parser, fileName);
       List<BibTeXObject> objects = database.getObjects();
-      //    assertEquals(4498, objects.size());
 
       Collection<BibTeXEntry> entries = (database.getEntries()).values();
       System.out.println( "num entries : " +  entries.size() );
       for(BibTeXEntry entry : entries) {
-        // Map<Key, Value> fields = entry.getFields();
-        // for ( Key k : fields.keySet()) {
-        //   System.out.println("Key = " + k + " Value = " + fields.get(k).toUserString() ); // entry.getField(key));
-        // }
         Biblio biblio = new Biblio();
         //author
         Key key = new Key("author");
@@ -266,36 +260,19 @@ public class BiblioController {
         if(value == null){
           continue;
         }
-        try {
-          String lxString = value.toUserString();
-          // System.out.println(lxString);
-          //List<LaTeXObject> objects = parseLaTeX(lxString);
-          //String plainTextString = printLaTeX(objects);
-          //System.out.println(plainTextString);
-        } catch(Exception e){
-          e.printStackTrace(System.out);
-        }
-        // System.out.println();
       }
-      //Map<Key, BibTeXString> strings = database.getStrings();
-      //    assertEquals(467, strings.size());
-      // Map<Key, BibTeXEntry> entries = database.getEntries();
-      //    assertEquals(4030, entries.size());
     }  catch(Exception e) {
       System.out.println( "Bibtex Parse Exception\n" + e );
-    } // finally {      reader.close();    }
-
+    }
     redirectAttributes.addFlashAttribute("css", "success");
     redirectAttributes.addFlashAttribute("msg", "Bibliography has been imported!");
     return "redirect:/biblios";
   }
 
   static  private BibTeXDatabase parse(BibTeXParser parser, String path) {
-    // InputStream is = (BibTeXParserTest.class).getResourceAsStream(path);
     try {
         Reader reader=null;
       try {
-        /// Reader reader = new InputStreamReader(is, "US-ASCII");
         reader = new FileReader(path);
         return parser.parse(reader);
       } catch(Exception e) {
@@ -336,16 +313,38 @@ public class BiblioController {
   }
 
   // search
-  @RequestMapping(value = "biblios/search", method = RequestMethod.GET)
-  public String searchBiblios(final RedirectAttributes redirectAttributes) {
-      logger.debug("searchBiblios() : {}");
+	@RequestMapping(value = "/biblios/search", method = RequestMethod.GET)
+	public String showSearchForm(Model model) {
+
+		logger.debug("showSearchForm()");
+
+		Biblio biblio = new Biblio();
+
+		biblio.setAuthor("");
+		biblio.setTitle("");
+//		biblio.setYear(2017);
+		biblio.setJournal("");
+		model.addAttribute("searchform", biblio);
+	
+		return "biblios/searchform";
+
+	}
+
+  @RequestMapping(value = "biblios/dosearch", method = RequestMethod.POST)
+  public String searchBiblios(@ModelAttribute("bibliow") Biblio bibliow, Model model, final RedirectAttributes redirectAttributes) {
+     logger.debug("searchBiblios() : {}");
       try {
- 
-      redirectAttributes.addFlashAttribute("css", "success");
-      redirectAttributes.addFlashAttribute("msg", "Bibliography has been imported!");
-      return "redirect:/biblios";
+        String title = bibliow.getTitle();
+        title = title.substring(1);
+        System.out.println( "dosearch starts:" + title );
+     	  List<Biblio> lb = biblioService.findByTitle(title);
+        System.out.println( " " + lb );
+        model.addAttribute("biblios",lb);
+	      redirectAttributes.addFlashAttribute("css", "success");
+        redirectAttributes.addFlashAttribute("msg", "Search Results:");
+	      return "biblios/list";       
     } catch (Exception e) {
-      ;
+      System.out.println( "dosearch exception: " + e );
     }
     return null;
   }
