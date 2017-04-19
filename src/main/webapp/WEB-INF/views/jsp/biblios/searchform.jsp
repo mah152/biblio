@@ -37,7 +37,7 @@
 			<div class="form-group ${status.error ? 'has-error' : ''}">
 				<label class="col-sm-2 control-label">Title</label>
 				<div class="col-sm-10">
-					<form:input path="title" class="form-control" id="title" placeholder="Title" />
+					<form:input path="title" class="form-control" id="title" placeholder="full or partial Title" />
 					<form:errors path="title" class="control-label" />
 				</div>
 			</div>

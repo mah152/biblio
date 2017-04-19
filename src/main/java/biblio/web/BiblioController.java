@@ -1,20 +1,19 @@
 package biblio.web;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.PrintWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.jbibtex.BibTeXDatabase;
+import org.jbibtex.BibTeXEntry;
+import org.jbibtex.BibTeXObject;
+import org.jbibtex.BibTeXParser;
+import org.jbibtex.Key;
+import org.jbibtex.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import org.jbibtex.BibTeXObject;
-import org.jbibtex.BibTeXDatabase;
-import org.jbibtex.BibTeXEntry;
-import org.jbibtex.BibTeXFormatter;
-import org.jbibtex.BibTeXParser;
-import org.jbibtex.BibTeXString;
-import org.jbibtex.Key;
-import org.jbibtex.Value;
-import org.jbibtex.ParseException;
 
 import biblio.model.Biblio;
 import biblio.service.BiblioService;
@@ -129,6 +118,7 @@ public class BiblioController {
 		biblio.setTitle("title123");
 		biblio.setYear(2017);
 		biblio.setJournal("journal123");
+		biblio.setBibtexkey("at2017");
 		model.addAttribute("biblioForm", biblio);
 	
 		return "biblios/biblioform";
@@ -205,19 +195,23 @@ public class BiblioController {
       String title = biblio.getTitle();
       String journal =  biblio.getJournal();
       Integer year = biblio.getYear();
-      //bibtex key pattern, author+ID
-      //String bibtexKey = author + biblio.getId().toString();
-      String bibtexKey =  biblio.getId().toString();
-      exportStr( "@" + btype + "{ " + bibtexKey + ",\n" );
+      String bibtexkey =  biblio.getBibtexkey();
+      String pages =  biblio.getPages();
+      String volume =  biblio.getVolume();
+      String number =  biblio.getNumber();
+      exportStr( "@" + btype + "{ " + bibtexkey + ",\n" );
       exportStr( "author  =  {" + author +  "},\n");
       exportStr( "title   =  {" + title  +  "},\n");
       exportStr( "journal =  {" + journal + "},\n");
       exportStr( "year    =  " + year    +   ",\n");
+      exportStr( "pages =  {" + pages + "},\n");
+      exportStr( "volume =  {" + volume + "},\n");
+      exportStr( "number =  {" + number + "},\n");
       exportStr( "}\n\n" );
     }
     closeExportFile();
     redirectAttributes.addFlashAttribute("css", "success");
-    redirectAttributes.addFlashAttribute("msg", "Bibliography has been exported!");
+    redirectAttributes.addFlashAttribute("msg", "Bibliography has been exported to file biblio-data.bib!");
 
     return "redirect:/biblios";
 
@@ -231,7 +225,7 @@ public class BiblioController {
     try {
       BibTeXParser parser = new BibTeXParser();
       BibTeXDatabase database = parse(parser, fileName);
-      List<BibTeXObject> objects = database.getObjects();
+      //List<BibTeXObject> objects = database.getObjects();
 
       Collection<BibTeXEntry> entries = (database.getEntries()).values();
       System.out.println( "num entries : " +  entries.size() );
@@ -240,23 +234,55 @@ public class BiblioController {
         //author
         Key key = new Key("author");
         Value value = entry.getField(key);
-        biblio.setAuthor( value.toUserString() );
+        if(value != null){
+        	biblio.setAuthor( value.toUserString() );
+        }
         //title
         key = new Key("title");
         value = entry.getField(key);
-        biblio.setTitle( value.toUserString() );
+        if(value != null)
+        	biblio.setTitle( value.toUserString() );
         //year
         key = new Key("year");
         value = entry.getField(key);
-        biblio.setYear( Integer.parseInt( value.toUserString() ));
+        if(value != null)
+        	biblio.setYear( Integer.parseInt( value.toUserString() ));
         //journal
         key = new Key("journal");
         value = entry.getField(key);
-        biblio.setJournal( value.toUserString() );
+        if(value != null)
+        	biblio.setJournal( value.toUserString() );
         
+        //bibtexkey
+        key = new Key("bibtexkey");
+        value = entry.getField(key);
+        if(value != null){
+        	biblio.setBibtexkey( value.toUserString());
+        }
+        //pages
+        key = new Key("pages");
+        value = entry.getField(key);
+        if(value != null)
+        	biblio.setPages( value.toUserString());
+        
+        //volume
+        key = new Key("volume");
+        value = entry.getField(key);
+        if(value != null)
+        	biblio.setVolume( value.toUserString());
+        
+        //number
+        key = new Key("number");
+        value = entry.getField(key);
+        if(value != null)
+        	biblio.setNumber( value.toUserString());
+              
         biblioService.saveOrUpdate(biblio);
         
-          // The field is not defined
+        //update bibtexkey
+        
+        
+        // The field is not defined
         if(value == null){
           continue;
         }
@@ -265,7 +291,7 @@ public class BiblioController {
       System.out.println( "Bibtex Parse Exception\n" + e );
     }
     redirectAttributes.addFlashAttribute("css", "success");
-    redirectAttributes.addFlashAttribute("msg", "Bibliography has been imported!");
+    redirectAttributes.addFlashAttribute("msg", "Bibliography from file biblio-data.bib has been imported!");
     return "redirect:/biblios";
   }
 

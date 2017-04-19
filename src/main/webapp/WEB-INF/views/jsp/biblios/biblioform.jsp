@@ -66,6 +66,46 @@
 				</div>
 			</div>
 		</spring:bind>
+		
+		<spring:bind path="bibtexkey">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<label class="col-sm-2 control-label">BibtexKey</label>
+				<div class="col-sm-10">
+					<form:input path="bibtexkey" class="form-control" id="bibtexkey" placeholder="BibtexKey" />
+					<form:errors path="bibtexkey" class="control-label" />
+				</div>
+			</div>
+		</spring:bind>
+		
+		<spring:bind path="pages">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<label class="col-sm-2 control-label">Pages</label>
+				<div class="col-sm-10">
+					<form:input path="pages" class="form-control" id="pages" placeholder="Pages" />
+					<form:errors path="pages" class="control-label" />
+				</div>
+			</div>
+		</spring:bind>
+		
+		<spring:bind path="volume">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<label class="col-sm-2 control-label">Volume</label>
+				<div class="col-sm-10">
+					<form:input path="volume" class="form-control" id="volume" placeholder="Volume" />
+					<form:errors path="volume" class="control-label" />
+				</div>
+			</div>
+		</spring:bind>
+		
+		<spring:bind path="number">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<label class="col-sm-2 control-label">Journal</label>
+				<div class="col-sm-10">
+					<form:input path="number" class="form-control" id="number" placeholder="Number" />
+					<form:errors path="number" class="control-label" />
+				</div>
+			</div>
+		</spring:bind>
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">

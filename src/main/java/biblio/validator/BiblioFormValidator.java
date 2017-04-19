@@ -30,6 +30,7 @@ public class BiblioFormValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "NotEmpty.biblioForm.title");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "year", "NotEmpty.biblioForm.year");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "journal", "NotEmpty.biblioForm.journal");
+		//ValidationUtils.rejectIfEmptyOrWhitespace(errors, "bibtexkey", "NotEmpty.biblioForm.bibtexkey");
 				
 		if(biblio.getYear()==null || biblio.getYear()<=0){
 			errors.rejectValue("year", "NotEmpty.biblioForm.year");

@@ -34,6 +34,10 @@
 					<th>Title</th>
 					<th>Year</th>
 					<th>Journal</th>
+					<th>BibtexKey</th>
+					<th>Pages</th>
+					<th>Volume</th>
+					<th>Number</th>
 				</tr>
 			</thead>
 
@@ -46,10 +50,13 @@
 					<td>${biblio.title}</td>
 					<td>${biblio.year}</td>
 					<td>${biblio.journal}</td>
+					<td>${biblio.bibtexkey}</td>
+					<td>${biblio.pages}</td>
+					<td>${biblio.volume}</td>
+					<td>${biblio.number}</td>
           <td class="active"><a href="${urlBib}/${biblio.id}/update">Update</a></td>
           <td class="active"><a href="${urlBib}/${biblio.id}/delete">Delete</a></td>
-      </ul>
-				</tr>
+      	</tr>
 
 			</c:forEach>
 		</table>

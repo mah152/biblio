@@ -47,6 +47,26 @@
 		<label class="col-sm-2">Journal</label>
 		<div class="col-sm-10">${biblio.journal}</div>
 	</div>
+	
+	<div class="row">
+		<label class="col-sm-2">BibtexKey</label>
+		<div class="col-sm-10">${biblio.bibtexkey}</div>
+	</div>
+
+	<div class="row">
+		<label class="col-sm-2">Pages</label>
+		<div class="col-sm-10">${biblio.pages}</div>
+	</div>
+	
+	<div class="row">
+		<label class="col-sm-2">Volume</label>
+		<div class="col-sm-10">${biblio.volume}</div>
+	</div>
+
+	<div class="row">
+		<label class="col-sm-2">Number</label>
+		<div class="col-sm-10">${biblio.number}</div>
+	</div>
 
 </div>
 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import biblio.model.Biblio;
 
+
 @Repository
 public class BiblioDaoImpl implements BiblioDao {
 
@@ -61,7 +62,10 @@ public class BiblioDaoImpl implements BiblioDao {
 	public List<Biblio> findByTitle(String title) {
     Map<String, Object> params = new HashMap<String, Object>();
  	  params.put("title", title);
- 	  String sql = "SELECT * FROM biblio WHERE title LIKE :title";
+ 	  
+ 	String sql = 
+			 "SELECT * FROM biblio WHERE title LIKE '" + title + "%' OR title LIKE '%" + title + "%'";
+ 	  
  	  List<Biblio> result = namedParameterJdbcTemplate.query(sql, params, new BiblioMapper());
     System.out.println( "" + result.size() );
  	  return result;
@@ -72,18 +76,28 @@ public class BiblioDaoImpl implements BiblioDao {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
-		String sql = "INSERT INTO BIBLIO(AUTHOR, TITLE, YEAR, JOURNAL) "
-				+ "VALUES ( :author, :title, :year, :journal)";
+		String sql = "INSERT INTO BIBLIO(AUTHOR, TITLE, YEAR, JOURNAL, BIBTEXKEY, PAGES, VOLUME, NUMBER) "
+				+ "VALUES ( :author, :title, :year, :journal, :bibtexkey, :pages, :volume, :number)";
 
 		namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(biblio), keyHolder);
 		biblio.setId(keyHolder.getKey().intValue());
 		
+		//create bibtex key if user didn't provide
+		if( biblio.getBibtexkey() == null ){
+			biblio.setBibtexkey( new String( biblio.getId().toString()) );
+			update(biblio);
+		}
+		else if( biblio.getBibtexkey().trim().isEmpty() ){
+			biblio.setBibtexkey(biblio.getId().toString());
+			update(biblio);
+		}
 	}
 
   @Override
   public void update(Biblio biblio) {
 
-    String sql = "UPDATE BIBLIO SET AUTHOR=:author, TITLE=:title, YEAR=:year,  JOURNAL=:year WHERE id=:id";
+    String sql =
+    "UPDATE BIBLIO SET AUTHOR=:author, TITLE=:title, YEAR=:year, JOURNAL=:journal, BIBTEXKEY=:bibtexkey, PAGES=:pages, VOLUME=:volume, NUMBER=:number WHERE id=:id";
 
     namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(biblio));
   }
@@ -103,6 +117,10 @@ public class BiblioDaoImpl implements BiblioDao {
 		paramSource.addValue("title", biblio.getTitle());
 		paramSource.addValue("year", biblio.getYear());
 		paramSource.addValue("journal", biblio.getJournal());
+		paramSource.addValue("bibtexkey", biblio.getBibtexkey());
+		paramSource.addValue("pages", biblio.getPages());
+		paramSource.addValue("volume", biblio.getVolume());
+		paramSource.addValue("number", biblio.getNumber());
 		
 		return paramSource;
 	}
@@ -116,6 +134,10 @@ public class BiblioDaoImpl implements BiblioDao {
 			biblio.setTitle( rs.getString("title" ));
 			biblio.setYear( rs.getInt("year" ));
 			biblio.setJournal( rs.getString("journal" ));
+			biblio.setBibtexkey( rs.getString("bibtexkey" ));
+			biblio.setPages( rs.getString("pages" ));
+			biblio.setVolume( rs.getString("volume" ));
+			biblio.setNumber( rs.getString("number" ));
 			return biblio;
 		}
 	}

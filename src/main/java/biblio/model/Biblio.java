@@ -3,19 +3,27 @@ package biblio.model;
 public class Biblio {
 	// form:hidden - hidden value
 	Integer id;
-
-	// form:input - textbox
+	
+	//required
 	String author;
 
-	// form:input - textbox
 	String title;
 
-	// form:input - textbox
 	Integer year;
 	
-	// form:input - textbox
 	String journal;
+			
+	//citation key ex. 1
+	String bibtexkey;
 	
+	//optional
+	//ex. 42-111 or 7,41,73-97 or 43+
+	String pages;
+	
+	String volume;
+	
+	String number;
+
 
 	public boolean isNew() {
 		return (this.id == null);
@@ -58,11 +66,43 @@ public class Biblio {
 	public void setJournal(String journal) {
 		this.journal = journal;
 	}
+	
+	public String getBibtexkey() {
+		return bibtexkey;
+	}
+
+	public void setBibtexkey(String bibtexkey) {
+		this.bibtexkey = bibtexkey;
+	}
+	public String getPages() {
+		return pages;
+	}
+
+	public void setPages(String pages) {
+		this.pages = pages;
+	}
+	
+	public String getVolume() {
+		return volume;
+	}
+
+	public void setVolume(String volume) {
+		this.volume = volume;
+	}
+	
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
 
 	@Override
 	public String toString() {
 		return "Biblio [id=" + id + ", author=" + author + ", title=" + title + ", year=" + year +
-				", journal=" + journal;
+				", journal=" + journal + ", bibtexKey=" + bibtexkey + ", pages=" + pages + 
+				", volume=" + volume + ", number=" + number;
 	}
 
 }
