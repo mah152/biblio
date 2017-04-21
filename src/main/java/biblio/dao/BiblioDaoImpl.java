@@ -19,8 +19,8 @@ import org.springframework.stereotype.Repository;
 
 import biblio.model.Biblio;
 /**
-* <h1>This is the BiblioDaoImpl class </h1>
-* It implements the methods in the BiblioDao interface   
+* <h1>Implements the methods in the BiblioDao interface</h1>
+*    
 *
 * @author  Mohammed Binhamed
 * @version 1.0
@@ -47,7 +47,7 @@ public class BiblioDaoImpl implements BiblioDao {
 	/**
 	 * finds the biblio record with the given id and returns it
 	 *  
-	 * @param  biblio id
+	 * @param  id
 	 * @return Biblio if found, null otherwise
 	 */
 	@Override
@@ -140,7 +140,7 @@ public class BiblioDaoImpl implements BiblioDao {
 	
 	/**
 	 * delete biblio from the database
-	 * @param  biblio id
+	 * @param  id
 	 */
 	@Override
 	public void delete(Integer id) {

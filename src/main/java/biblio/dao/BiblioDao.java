@@ -4,8 +4,7 @@ import java.util.List;
 
 import biblio.model.Biblio;
 /**
-* <h1>This is the BiblioDao interface </h1>
-* It contains methods to find, save, update and delete Biblio data   
+* <h1>Contains methods to find, save, update and delete Biblio data</h1>
 * It is part of the data access layer
 * 
 * @author  Mohammed Binhamed

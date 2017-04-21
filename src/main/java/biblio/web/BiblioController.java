@@ -36,8 +36,8 @@ import biblio.model.Biblio;
 import biblio.service.BiblioService;
 import biblio.validator.BiblioFormValidator;
 /**
- * <h1>This is the BiblioController class</h1>
- * It contains fields and web request handler methods 
+ * <h1>Contains fields and web request handler methods </h1>
+ * 
  * It is part of the web layer
  * 
  * @author  Mohammed Binhamed

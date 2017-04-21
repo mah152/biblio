@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import biblio.dao.BiblioDao;
 import biblio.model.Biblio;
 /**
-* <h1>This is the BiblioServiceImpl class </h1>
-*  It implements the methods in the BiblioService interface.
+* <h1>Implements the methods in the BiblioService interface</h1>
 *  It is part of the data service layer.  
 * 
 * @author  Mohammed Binhamed

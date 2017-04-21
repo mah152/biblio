@@ -4,8 +4,8 @@ import java.util.List;
 
 import biblio.model.Biblio;
 /**
-* <h1>This is the BiblioService interface </h1>
-* It contains methods to find, save, update and delete Biblio data   
+* <h1>Contains methods to find, save, update and delete Biblio data  </h1>
+* 
 * It is part of the data service layer
 * 
 * @author  Mohammed Binhamed
