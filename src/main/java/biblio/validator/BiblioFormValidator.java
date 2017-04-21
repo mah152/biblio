@@ -8,19 +8,39 @@ import org.springframework.validation.Validator;
 
 import biblio.model.Biblio;
 import biblio.service.BiblioService;
-
+/**
+* <h1>This class implements the spring Validator interface methods</h1>
+*  It validates Biblio instances
+* 
+* @author  Mohammed Binhamed
+* @version 1.0
+*/
 //http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#validation-mvc-configuring
 @Component
 public class BiblioFormValidator implements Validator {
-		
+	
+	/**
+	 * autowire the biblio service bean
+	 */
 	@Autowired
 	BiblioService biblioService;
 	
+	/**
+	 * supports validation of Biblio instances only
+	 * @return true if Biblio
+	 */
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return Biblio.class.equals(clazz);
 	}
-
+	
+	/**
+	 * performs validation of a biblio
+	 * author, title, year, journal, year can't be empty,
+	 * year must be a positive number
+	 * @param target biblio
+	 * @param errors object
+	 */
 	@Override
 	public void validate(Object target, Errors errors) {
 

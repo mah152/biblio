@@ -18,18 +18,38 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import biblio.model.Biblio;
-
+/**
+* <h1>This is the BiblioDaoImpl class </h1>
+* It implements the methods in the BiblioDao interface   
+*
+* @author  Mohammed Binhamed
+* @version 1.0
+*/
 
 @Repository
 public class BiblioDaoImpl implements BiblioDao {
 
+	/**
+	 * allows the use of named parameters with JdbcTemplate  
+	 */
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+	/**
+	 * let spring autowire the bean
+	 * @param namedParameterJdbcTemplate
+	 * @throws DataAccessException
+	 */
 	@Autowired
 	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) throws DataAccessException {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
+	/**
+	 * finds the biblio record with the given id and returns it
+	 *  
+	 * @param  biblio id
+	 * @return Biblio if found, null otherwise
+	 */
 	@Override
 	public Biblio findById(Integer id) {
 
@@ -45,9 +65,13 @@ public class BiblioDaoImpl implements BiblioDao {
 			// do nothing, return null
 		}
 		return result;
-
 	}
-
+	
+	/**
+	 * finds all biblio-s from the database and returns them in a list
+	 *  
+	 * @return list with biblio records
+	 */
 	@Override
 	public List<Biblio> findAll() {
 
@@ -55,22 +79,30 @@ public class BiblioDaoImpl implements BiblioDao {
 		List<Biblio> result = namedParameterJdbcTemplate.query(sql, new BiblioMapper());
 
 		return result;
-
 	}
-
+	
+	/**
+	 * finds biblio-s with given title and returns them in a list
+	 * @param  title
+	 * @return list with biblio records
+	 */
 	@Override
 	public List<Biblio> findByTitle(String title) {
-    Map<String, Object> params = new HashMap<String, Object>();
- 	  params.put("title", title);
- 	  
- 	String sql = 
-			 "SELECT * FROM biblio WHERE title LIKE '" + title + "%' OR title LIKE '%" + title + "%'";
- 	  
- 	  List<Biblio> result = namedParameterJdbcTemplate.query(sql, params, new BiblioMapper());
-    System.out.println( "" + result.size() );
- 	  return result;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("title", title);
+
+		String sql = 
+				"SELECT * FROM biblio WHERE title LIKE '" + title + "%' OR title LIKE '%" + title + "%'";
+
+		List<Biblio> result = namedParameterJdbcTemplate.query(sql, params, new BiblioMapper());
+		System.out.println( "" + result.size() );
+		return result;
 	}
 
+	/**
+	 * saves given biblio in the database
+	 * @param  biblio to save
+	 */
 	@Override
 	public void save(Biblio biblio) {
 
@@ -92,23 +124,38 @@ public class BiblioDaoImpl implements BiblioDao {
 			update(biblio);
 		}
 	}
+	
+	/**
+	 * updates given biblio in the database
+	 * @param  biblio
+	 */
+	@Override
+	public void update(Biblio biblio) {
 
-  @Override
-  public void update(Biblio biblio) {
+		String sql =
+				"UPDATE BIBLIO SET AUTHOR=:author, TITLE=:title, YEAR=:year, JOURNAL=:journal, BIBTEXKEY=:bibtexkey, PAGES=:pages, VOLUME=:volume, NUMBER=:number WHERE id=:id";
 
-    String sql =
-    "UPDATE BIBLIO SET AUTHOR=:author, TITLE=:title, YEAR=:year, JOURNAL=:journal, BIBTEXKEY=:bibtexkey, PAGES=:pages, VOLUME=:volume, NUMBER=:number WHERE id=:id";
+		namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(biblio));
+	}
+	
+	/**
+	 * delete biblio from the database
+	 * @param  biblio id
+	 */
+	@Override
+	public void delete(Integer id) {
 
-    namedParameterJdbcTemplate.update(sql, getSqlParameterByModel(biblio));
-  }
-
-  @Override
-  public void delete(Integer id) {
-
-    String sql = "DELETE FROM BIBLIO WHERE id= :id";
-    namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
-  }
-
+		String sql = "DELETE FROM BIBLIO WHERE id= :id";
+		namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+	}
+	
+	/**
+	 * helper method used with NamedParameterJdbcTemplate 
+	 * creates and returns a map with sql parameters 
+	 * 
+	 * @param  biblio
+	 * @return map with sql parameters
+	 */
 	private SqlParameterSource getSqlParameterByModel(Biblio biblio) {
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -124,9 +171,18 @@ public class BiblioDaoImpl implements BiblioDao {
 		
 		return paramSource;
 	}
-
+	
+    /**
+	* This class implements the mapRow method from the RowMapper interface  
+	* which is used by the JdbcTemplate
+	*/
 	private static final class BiblioMapper implements RowMapper<Biblio> {
-
+		/**
+		 * maps a row from a jdbc ResultSet to a Biblio object.
+		 * @param rs
+		 * @param rowNum
+		 * @return biblio
+		 */
 		public Biblio mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Biblio biblio = new Biblio();
 			biblio.setId(rs.getInt("id"));

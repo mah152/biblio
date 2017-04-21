@@ -9,7 +9,12 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-
+/**
+* <h1>This class contains the Spring web MVC configuration </h1> 
+*  
+* @author  Mohammed Binhamed
+* @version 1.0
+*/
 @EnableWebMvc
 @Configuration
 @ComponentScan({ "biblio.web", "biblio.service", "biblio.dao",

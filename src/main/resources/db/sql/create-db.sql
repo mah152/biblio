@@ -11,3 +11,5 @@ CREATE TABLE biblio (
   volume VARCHAR(255),
   number VARCHAR(255)
 );
+ALTER TABLE biblio ADD UNIQUE (author,title);
+ALTER TABLE biblio ADD UNIQUE (bibtexkey);

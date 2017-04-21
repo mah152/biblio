@@ -1,38 +1,78 @@
 package biblio.model;
-
+/**
+* <h1>This is the Biblio model class implementation</h1>
+* It contains the fields, getters, setters and toString methods
+* 
+* @author  Mohammed Binhamed
+* @version 1.0
+*/
 public class Biblio {
-	// form:hidden - hidden value
+	/**
+	 * database id, automatically generated in the database
+	 */
 	Integer id;
 	
-	//required
+	/**
+	 * name of the author/s
+	 */
 	String author;
-
+	
+    /**
+     * article title
+     */
 	String title;
-
+	
+	/**
+	 * publication year
+	 */
 	Integer year;
 	
+	/**
+	 * journal where article was published
+	 */
 	String journal;
 			
-	//citation key ex. 1
+	/**
+	 * bibtex citation key
+	 */
 	String bibtexkey;
 	
-	//optional
-	//ex. 42-111 or 7,41,73-97 or 43+
+	/**
+	 * article pages from journal
+	 * ex. 42-111 or 7,41,73-97 or 43+
+	 * 
+	 */
 	String pages;
 	
+	/**
+	 * journal volume
+	 */
 	String volume;
 	
+	/**
+	 * journal number
+	 */
 	String number;
 
-
+	/**
+	 * this method is used to determine if a new biblio is being added,
+	 * or an existing biblio is being updated 
+	 * @return boolean
+	 */
 	public boolean isNew() {
 		return (this.id == null);
 	}
-
+	/**
+	 * 
+	 * @return Integer returns the database id 
+	 */
 	public Integer getId() {
 		return id;
 	}
-
+	/**
+	 * set the database id
+	 * @param id 
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -97,7 +137,10 @@ public class Biblio {
 	public void setNumber(String number) {
 		this.number = number;
 	}
-
+	/**
+	 * string representation of biblio, useful in debugging
+	 * @return String 
+	 */
 	@Override
 	public String toString() {
 		return "Biblio [id=" + id + ", author=" + author + ", title=" + title + ", year=" + year +

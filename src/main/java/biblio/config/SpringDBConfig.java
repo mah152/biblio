@@ -10,7 +10,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-
+/**
+* <h1>This class configures an embedded database http://www.hsqldb.org/ </h1> 
+* it uses the create-db.sql script to create a table and
+* the insert-data.sql script to populate it with data 
+* 
+* @author  Mohammed Binhamed
+* @version 1.0
+*/
 @Configuration
 public class SpringDBConfig {
 
